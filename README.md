@@ -1,2 +1,2 @@
 # Dine-Smart-Restaurant
-Username-admin
+Username-admin Password-1234
