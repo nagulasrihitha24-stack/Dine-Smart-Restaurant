@@ -1,0 +1,20 @@
+<!-- templates/payment_success.html -->
+{% extends "base.html" %}
+{% block title %}Payment - DineSmart{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card glass-effect-3d" style="text-align: center;">
+        <div class="auth-header">
+            <div class="auth-icon">✅</div>
+            <h2>Payment Initiated!</h2>
+            <p>{{ message }}</p>
+            <p style="margin-top: 10px;">Your table has been reserved. We look forward to serving you!</p>
+        </div>
+        
+        <a href="{{ url_for('feedback') }}" class="btn-auth" style="display: inline-block; text-decoration: none; margin-top: 20px;">
+            <span>Continue to Feedback</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+\<!-- templates/booking.html -->
+{% extends "base.html" %}
+{% block title %}Table Booking - DineSmart{% endblock %}
+{% block content %}
+<div class="booking-container">
+    <div class="booking-card glass-effect-3d">
+        <div class="booking-header">
+            <div class="booking-icon">📅</div>
+            <h2>Reserve Your Table</h2>
+            <p>Secure your spot for an unforgettable dining experience</p>
+        </div>
+        
+        {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST" class="booking-form">
+            <div class="input-group-3d">
+                <i class="fas fa-calendar-alt"></i>
+                <input type="date" name="date" required>
+            </div>
+            
+            <div class="input-group-3d">
+                <i class="fas fa-clock"></i>
+                <input type="time" name="time" required>
+            </div>
+            
+            <div class="input-group-3d">
+                <i class="fas fa-users"></i>
+                <select name="persons" required>
+                    <option value="">Number of Persons</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10+</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn-auth">
+                <span>Confirm Booking</span>
+                <i class="fas fa-check-circle"></i>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

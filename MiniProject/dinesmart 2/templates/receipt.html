@@ -1,0 +1,352 @@
+<!-- templates/receipt.html (updated with better design) -->
+{% extends "base.html" %}
+{% block title %}Payment Receipt - DineSmart{% endblock %}
+{% block content %}
+<div class="receipt-container">
+    <div class="receipt-card">
+        <div class="receipt-header">
+            <div class="success-animation">
+                <div class="checkmark">✓</div>
+            </div>
+            <div class="restaurant-logo">
+                <span class="logo-emoji">🍽️</span>
+                <h2>DineSmart</h2>
+            </div>
+            <p class="restaurant-tagline">Payment Successful!</p>
+            <div class="receipt-meta">
+                <p><strong>Receipt #:</strong> {{ receipt.receipt_number }}</p>
+                <p><strong>Date:</strong> {{ receipt.date }} | <strong>Time:</strong> {{ receipt.time }}</p>
+            </div>
+        </div>
+
+        <div class="customer-info">
+            <h3><i class="fas fa-user"></i> Customer Information</h3>
+            <p><strong>Name:</strong> {{ receipt.customer_name }}</p>
+            <p><strong>Booking Date:</strong> {{ receipt.booking_date }} at {{ receipt.booking_time }}</p>
+            <p><strong>Number of Persons:</strong> {{ receipt.persons }}</p>
+        </div>
+
+        <div class="order-details">
+            <h3><i class="fas fa-shopping-cart"></i> Order Summary</h3>
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in receipt.order_items %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.qty }}</td>
+                        <td>₹{{ item.price }}</td>
+                        <td>₹{{ item.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bill-summary">
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <span>₹{{ receipt.total }}</span>
+            </div>
+            <div class="summary-row">
+                <span>GST (5%):</span>
+                <span>₹{{ receipt.gst }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Service Charge (10%):</span>
+                <span>₹{{ receipt.service_charge }}</span>
+            </div>
+            <div class="summary-row grand-total">
+                <span><strong>GRAND TOTAL:</strong></span>
+                <span><strong>₹{{ receipt.grand_total }}</strong></span>
+            </div>
+        </div>
+
+        <div class="payment-info">
+            <h3><i class="fas fa-credit-card"></i> Payment Information</h3>
+            <p><strong>Payment Method:</strong> {{ receipt.payment_method }}</p>
+            <p><strong>Status:</strong> <span class="paid-status">✓ Payment Completed</span></p>
+            <p><strong>Transaction ID:</strong> {{ receipt.receipt_number }}</p>
+        </div>
+
+        <div class="receipt-footer">
+            <p class="thankyou-message">Thank you for dining with us!</p>
+            <p class="small-text">We hope to serve you again soon</p>
+            <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+            <div class="action-buttons">
+                <a href="{{ url_for('download_receipt') }}" class="btn-download">
+                    <i class="fas fa-download"></i> Download Receipt
+                </a>
+                <button onclick="window.print()" class="btn-print">
+                    <i class="fas fa-print"></i> Print Receipt
+                </button>
+                <a href="{{ url_for('feedback') }}" class="btn-feedback">
+                    <i class="fas fa-comment"></i> Give Feedback
+                </a>
+                <a href="{{ url_for('clear_session') }}" class="btn-new-order">
+                    <i class="fas fa-redo"></i> New Order
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.receipt-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.receipt-card {
+    background: white;
+    border-radius: 20px;
+    max-width: 750px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.receipt-header {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.success-animation {
+    margin-bottom: 20px;
+}
+
+.checkmark {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #28a745;
+    animation: checkmark 0.5s ease;
+}
+
+@keyframes checkmark {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.restaurant-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.logo-emoji {
+    font-size: 40px;
+}
+
+.restaurant-logo h2 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.restaurant-tagline {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    opacity: 0.95;
+}
+
+.receipt-meta {
+    background: rgba(255,255,255,0.2);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+.customer-info, .order-details, .payment-info {
+    padding: 20px 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.customer-info h3, .order-details h3, .payment-info h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.customer-info p {
+    margin: 8px 0;
+    color: #555;
+}
+
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.receipt-table th {
+    text-align: left;
+    padding: 10px 5px;
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    color: #333;
+}
+
+.receipt-table td {
+    padding: 10px 5px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+}
+
+.bill-summary {
+    padding: 20px 30px;
+    background: #f8f9fa;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    color: #555;
+}
+
+.grand-total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #dee2e6;
+    font-size: 1.2rem;
+    color: #28a745;
+}
+
+.payment-info {
+    background: #f8f9fa;
+}
+
+.paid-status {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.receipt-footer {
+    padding: 30px;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.thankyou-message {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.small-text {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.rating-stars {
+    font-size: 1.5rem;
+    letter-spacing: 5px;
+    margin: 15px 0;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-download, .btn-print, .btn-feedback, .btn-new-order {
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.btn-download {
+    background: white;
+    color: #667eea;
+}
+
+.btn-print {
+    background: #ffc107;
+    color: #333;
+}
+
+.btn-feedback {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-new-order {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-download:hover, .btn-print:hover, .btn-feedback:hover, .btn-new-order:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+@media print {
+    .main-header, .main-footer, .action-buttons, .btn-download, .btn-print, .btn-feedback, .btn-new-order, .success-animation {
+        display: none !important;
+    }
+    
+    .receipt-card {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .receipt-container {
+        padding: 0;
+        background: white;
+    }
+    
+    .receipt-header {
+        background: #f8f9fa;
+        color: #333;
+    }
+}
+</style>
+{% endblock %}

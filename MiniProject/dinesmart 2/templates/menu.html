@@ -1,0 +1,130 @@
+<!-- templates/menu.html -->
+{% extends "base.html" %}
+{% block title %}Menu - DineSmart{% endblock %}
+{% block content %}
+<div class="menu-container">
+    <div class="menu-header">
+        <div class="floating-food">🍕 🍔 🍝 🥘 🍰</div>
+        <h2><i class="fas fa-magic"></i> Our Exquisite Menu</h2>
+        <p class="menu-subtitle">Discover 50+ mouth-watering dishes crafted with love</p>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">
+        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="POST" id="menuForm">
+        {% for category_key, category in menu_items.items() %}
+        <div class="category-section" data-category="{{ category_key }}">
+            <div class="category-header">
+                <div class="category-icon-wrapper">
+                    <div class="category-icon-3d">{{ category.icon }}</div>
+                </div>
+                <h3>{{ category.name }}</h3>
+                <span class="item-count-badge">{{ category['items']|length }} items</span>
+            </div>
+            
+            <div class="items-grid">
+                {% for item_id, item in category['items'].items() %}
+                <div class="menu-card {% if not item.veg %}non-veg-card{% else %}veg-card{% endif %}" data-item="{{ item_id }}">
+                    <div class="card-badge">
+                        {% if item.veg %}
+                        <span class="veg-badge"><i class="fas fa-leaf"></i> VEG</span>
+                        {% else %}
+                        <span class="nonveg-badge"><i class="fas fa-drumstick-bite"></i> NON-VEG</span>
+                        {% endif %}
+                    </div>
+                    <div class="menu-emoji-3d">
+                        <div class="emoji-sphere">{{ item.emoji }}</div>
+                    </div>
+                    <h4>{{ item.name }}</h4>
+                    <p class="item-description">{{ item.description }}</p>
+                    <div class="price-tag">
+                        <span class="currency">₹</span>
+                        <span class="price-value">{{ item.price }}</span>
+                    </div>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-btn minus" onclick="updateQuantity('{{ item_id }}', -1)">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" name="{{ item_id }}" id="{{ item_id }}" value="0" min="0" max="20" class="qty-input" onchange="updateSummary()">
+                        <button type="button" class="qty-btn plus" onclick="updateQuantity('{{ item_id }}', 1)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="order-summary-fixed" id="orderSummary">
+            <div class="summary-content">
+                <div class="cart-info">
+                    <i class="fas fa-shopping-basket"></i>
+                    <span id="itemCount">0</span> items
+                </div>
+                <div class="total-info">
+                    <span>Total:</span>
+                    <span class="total-amount">₹<span id="totalPrice">0</span></span>
+                </div>
+                <button type="submit" class="btn-checkout">
+                    <span>Proceed to Booking</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function updateQuantity(itemId, change) {
+        const input = document.getElementById(itemId);
+        if (input) {
+            let currentValue = parseInt(input.value) || 0;
+            let newValue = currentValue + change;
+            if (newValue < 0) newValue = 0;
+            if (newValue > 20) newValue = 20;
+            input.value = newValue;
+            updateSummary();
+            
+            // Animation
+            const card = input.closest('.menu-card');
+            if (card) {
+                card.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    card.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+    }
+    
+    function updateSummary() {
+        let total = 0;
+        let itemCount = 0;
+        
+        {% for category_key, category in menu_items.items() %}
+            {% for item_id, item in category['items'].items() %}
+                const input_{{ item_id }} = document.getElementById('{{ item_id }}');
+                if (input_{{ item_id }}) {
+                    const qty = parseInt(input_{{ item_id }}.value) || 0;
+                    total += qty * {{ item.price }};
+                    itemCount += qty;
+                }
+            {% endfor %}
+        {% endfor %}
+        
+        const totalSpan = document.getElementById('totalPrice');
+        const countSpan = document.getElementById('itemCount');
+        if (totalSpan) totalSpan.innerText = total;
+        if (countSpan) countSpan.innerText = itemCount;
+    }
+    
+    // Initial update
+    document.addEventListener('DOMContentLoaded', function() {
+        updateSummary();
+    });
+</script>
+{% endblock %}

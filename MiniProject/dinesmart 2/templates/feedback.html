@@ -1,0 +1,40 @@
+<!-- templates/feedback.html -->
+{% extends "base.html" %}
+{% block title %}Feedback - DineSmart{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card glass-effect-3d">
+        <div class="auth-header">
+            <div class="auth-icon">💬</div>
+            <h2>Share Your Experience</h2>
+            <p>Your feedback helps us improve</p>
+        </div>
+        
+        <form method="POST" class="auth-form">
+            <div class="input-group-3d">
+                <i class="fas fa-star"></i>
+                <select name="rating" required>
+                    <option value="">Select rating</option>
+                    <option>⭐ - Poor</option>
+                    <option>⭐⭐ - Fair</option>
+                    <option>⭐⭐⭐ - Good</option>
+                    <option>⭐⭐⭐⭐ - Very Good</option>
+                    <option>⭐⭐⭐⭐⭐ - Excellent</option>
+                </select>
+            </div>
+            
+            <div class="input-group-3d">
+                <i class="fas fa-comment"></i>
+                <textarea name="feedback" rows="4" placeholder="Tell us about your dining experience..." required style="background: transparent; border: none; color: white; width: 100%; padding: 10px 0; resize: none;"></textarea>
+            </div>
+            
+            <button type="submit" class="btn-auth">
+                <span>Submit Feedback</span>
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+        
+        <a href="{{ url_for('bill') }}" style="display: inline-block; margin-top: 20px; text-align: center; color: #ffd700; text-decoration: none;">← Back to Bill</a>
+    </div>
+</div>
+{% endblock %}

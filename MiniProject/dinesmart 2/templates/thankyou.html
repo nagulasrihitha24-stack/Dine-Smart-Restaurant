@@ -1,0 +1,20 @@
+<!-- templates/thankyou.html -->
+{% extends "base.html" %}
+{% block title %}Thank You - DineSmart{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card glass-effect-3d" style="text-align: center;">
+        <div class="auth-header">
+            <div class="auth-icon">🎉</div>
+            <h2>Thank You!</h2>
+            <p>Your feedback has been recorded.</p>
+            <p style="margin-top: 10px;">We hope to serve you again soon!</p>
+        </div>
+        
+        <a href="{{ url_for('clear_session') }}" class="btn-auth" style="display: inline-block; text-decoration: none; margin-top: 20px;">
+            <span>Order Again</span>
+            <i class="fas fa-redo"></i>
+        </a>
+    </div>
+</div>
+{% endblock %}

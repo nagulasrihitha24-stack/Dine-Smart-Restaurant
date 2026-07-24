@@ -1,0 +1,68 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>{% block title %}DineSmart - 3D Food Paradise{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    
+    <div class="main-wrapper">
+        <header class="main-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-3d">
+                        <div class="logo-sphere">
+                            <span class="logo-icon">🍽️</span>
+                        </div>
+                        <h1>Dine<span class="highlight">Smart</span></h1>
+                    </div>
+                    <p class="tagline">Where <span class="gradient-text">Flavors</span> Come to Life</p>
+                </div>
+                {% if session.get('username') %}
+                <div class="user-greeting">
+                    <i class="fas fa-user-astronaut"></i>
+                    <span>Welcome, {{ session['username'] }}!</span>
+                </div>
+                {% endif %}
+            </div>
+        </header>
+
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>DineSmart</h4>
+                    <p>Smart Dining Experience</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>📞 +91 98765 43210</p>
+                    <p>✉️ hello@dinesmart.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <i class="fab fa-instagram"></i>
+                        <i class="fab fa-facebook"></i>
+                        <i class="fab fa-twitter"></i>
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 DineSmart Restaurant | Crafted with <i class="fas fa-heart"></i> for food lovers</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
